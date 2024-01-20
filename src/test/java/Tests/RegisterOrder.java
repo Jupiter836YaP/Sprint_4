@@ -1,3 +1,5 @@
+package Tests;
+
 import PaymentObject.*;
 
 import org.junit.runner.RunWith;
