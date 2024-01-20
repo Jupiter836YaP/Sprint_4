@@ -1,10 +1,10 @@
 import PaymentObject.*;
+
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.junit.Test;
-import org.openqa.selenium.firefox.FirefoxDriver;
 
 import static PaymentObject.ButtonType.FIRST;
 import static PaymentObject.ButtonType.SECOND;
@@ -18,13 +18,12 @@ public class RegisterOrder {
     private final String phone;
     private final String metro;
     private final boolean isSuccessfulWindow;
-
     private final String comment;
     private final String date;
     private final ButtonType buttonType;
 
 
-    WebDriver driver = new FirefoxDriver();
+    WebDriver driver = new ChromeDriver();
 
     public RegisterOrder(String firstName, String secondName, String address, String phone, String metro, String comment, String date, boolean isSuccessfulWindow, ButtonType buttonType) {
         this.firstName = firstName;
@@ -72,9 +71,9 @@ public class RegisterOrder {
         ConfirmationOrderPage confirmationOrderPage = new ConfirmationOrderPage(driver);
         confirmationOrderPage.clickConfirmButton();
 
-
         CompletedPage completedPage = new CompletedPage(driver);
         assertEquals("Текст не совпадает или отсутствует", completedPage.searchSuccessText().contains("Заказ оформлен"), isSuccessfulWindow);
+        driver.quit();
 
     }
 
