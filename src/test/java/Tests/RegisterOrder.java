@@ -2,6 +2,8 @@ package Tests;
 
 import PaymentObject.*;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.openqa.selenium.WebDriver;
@@ -23,9 +25,10 @@ public class RegisterOrder {
     private final String comment;
     private final String date;
     private final ButtonType buttonType;
+    private WebDriver driver;
 
 
-    WebDriver driver = new ChromeDriver();
+
 
     public RegisterOrder(String firstName, String secondName, String address, String phone, String metro, String comment, String date, boolean isSuccessfulWindow, ButtonType buttonType) {
         this.firstName = firstName;
@@ -48,9 +51,14 @@ public class RegisterOrder {
         };
     }
 
-    @Test
-    public void RegisterOrderTest() {
+    @Before
+    public void launchBrowser() {
+        driver = new ChromeDriver();
         driver.get("https://qa-scooter.praktikum-services.ru/");
+    }
+
+    @Test
+    public void registerOrderTest() {
         MainPage mainPage = new MainPage(driver);
         switch (buttonType) {
             case FIRST:
@@ -75,8 +83,10 @@ public class RegisterOrder {
 
         CompletedPage completedPage = new CompletedPage(driver);
         assertEquals("Текст не совпадает или отсутствует", completedPage.searchSuccessText().contains("Заказ оформлен"), isSuccessfulWindow);
-        driver.quit();
-
     }
 
+    @After
+    public void tearDown() {
+        driver.quit();
+    }
 }

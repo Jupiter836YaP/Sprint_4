@@ -1,6 +1,8 @@
 package Tests;
 
 import PaymentObject.MainPage;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -13,6 +15,8 @@ import static org.junit.Assert.assertEquals;
 public class DropDownList {
     private int panelNumber;
     private String expected;
+    private WebDriver driver;
+
 
     public DropDownList(int panelNumber, String expected) {
         this.panelNumber = panelNumber;
@@ -34,12 +38,21 @@ public class DropDownList {
         };
     }
 
-    @Test
-    public void DropDownListTest() {
-        WebDriver driver = new ChromeDriver();
+    @Before
+    public void launchBrowser() {
+        driver = new ChromeDriver();
         driver.get("https://qa-scooter.praktikum-services.ru/");
+    }
+
+    @Test
+    public void dropDownListTest() {
         MainPage mainPage = new MainPage(driver);
         assertEquals(expected, mainPage.getTextPanel(panelNumber));
+    }
+
+    @After
+    public void tearDown() {
         driver.quit();
     }
+
 }
