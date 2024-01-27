@@ -2,12 +2,8 @@ package Tests;
 
 import PaymentObject.*;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.junit.Test;
 
 import static PaymentObject.ButtonType.FIRST;
@@ -15,7 +11,7 @@ import static PaymentObject.ButtonType.SECOND;
 import static org.junit.Assert.*;
 
 @RunWith(Parameterized.class)
-public class RegisterOrder {
+public class RegisterOrder extends BaseTest {
     private final String firstName;
     private final String secondName;
     private final String address;
@@ -25,8 +21,6 @@ public class RegisterOrder {
     private final String comment;
     private final String date;
     private final ButtonType buttonType;
-    private WebDriver driver;
-
 
 
 
@@ -51,11 +45,6 @@ public class RegisterOrder {
         };
     }
 
-    @Before
-    public void launchBrowser() {
-        driver = new ChromeDriver();
-        driver.get("https://qa-scooter.praktikum-services.ru/");
-    }
 
     @Test
     public void registerOrderTest() {
@@ -69,24 +58,15 @@ public class RegisterOrder {
                 break;
         }
 
-        RegisterOrderPage registerOrderPage = new RegisterOrderPage(driver);
-        registerOrderPage.setInputPersonalData(firstName, secondName, address, phone);
-        registerOrderPage.selectMetroFromOptions(metro);
-        registerOrderPage.clickNextButton();
-
-        RentOrderPage rentOrderPage = new RentOrderPage(driver);
-        rentOrderPage.setInputPersonalData(date, comment);
-        rentOrderPage.clickOrderButton();
-
-        ConfirmationOrderPage confirmationOrderPage = new ConfirmationOrderPage(driver);
-        confirmationOrderPage.clickConfirmButton();
-
-        CompletedPage completedPage = new CompletedPage(driver);
-        assertEquals("Текст не совпадает или отсутствует", completedPage.searchSuccessText().contains("Заказ оформлен"), isSuccessfulWindow);
+        String successText = new RegisterOrderPage(driver)
+                .setInputPersonalData(firstName, secondName, address, phone)
+                .selectMetroFromOptions(metro)
+                .clickNextButton()
+                .setInputPersonalData(date, comment)
+                .clickOrderButton()
+                .clickConfirmButton()
+                .searchSuccessText();
+        assertEquals("Текст не совпадает или отсутствует", successText.contains("Заказ оформлен"), isSuccessfulWindow);
     }
 
-    @After
-    public void tearDown() {
-        driver.quit();
-    }
 }
