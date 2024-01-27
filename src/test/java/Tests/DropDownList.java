@@ -13,8 +13,8 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(Parameterized.class)
 public class DropDownList {
-    private int panelNumber;
-    private String expected;
+    private final int panelNumber;
+    private final String expected;
     private WebDriver driver;
 
 
@@ -41,13 +41,14 @@ public class DropDownList {
     @Before
     public void launchBrowser() {
         driver = new ChromeDriver();
-        driver.get("https://qa-scooter.praktikum-services.ru/");
+        driver.get(MainPage.URL);
     }
 
     @Test
     public void dropDownListTest() {
-        MainPage mainPage = new MainPage(driver);
-        assertEquals(expected, mainPage.getTextPanel(panelNumber));
+        String desireText = new MainPage(driver)
+                .getTextPanel(panelNumber);
+        assertEquals(expected, desireText);
     }
 
     @After
